@@ -9,32 +9,40 @@ import java.util.List;
 
 public class TransferTest {
 
+    private MaterialStock createMaterialStock(int id, BigDecimal blockedStock, BigDecimal qualityStock, BigDecimal unrestrictedStock) {
+        MaterialStock materialStock = new MaterialStock();
+        materialStock.setId(id);
+        materialStock.setBlockedStock(blockedStock);
+        materialStock.setQualityInspectionStock(qualityStock);
+        materialStock.setUnrestrictedStock(unrestrictedStock);
+
+        return materialStock;
+    }
+
+    private MovedStock createMovedStock(int id, String moveType, BigDecimal movTypeSumResult) {
+        MovedStock movedStock = new MovedStock();
+        movedStock.setId(id);
+        movedStock.setMoveType(moveType);
+        movedStock.setMovTypeSumResult(movTypeSumResult);
+
+        return movedStock;
+    }
+
     @Test
     public void countRealStocks_unrestrictedStock() {
         List<MaterialStock> materialStocks = new ArrayList<>();
 
-        MaterialStock materialStock = new MaterialStock();
-        materialStock.setId(1);
-        materialStock.setBlockedStock(BigDecimal.valueOf(0));
-        materialStock.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialStock.setUnrestrictedStock(BigDecimal.valueOf(123.45678));
+        MaterialStock materialStock = createMaterialStock(1, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678));
         materialStocks.add(materialStock);
 
         List<MovedStock> movedStocks = new ArrayList<>();
 
-        MovedStock movedStock = new MovedStock();
-        movedStock.setId(1);
-        movedStock.setMoveType("201");
-        movedStock.setMovTypeSumResult(BigDecimal.valueOf(87.654321));
+        MovedStock movedStock = createMovedStock(1, "201", BigDecimal.valueOf(87.654321));
         movedStocks.add(movedStock);
 
         List<MaterialStock> expected = new ArrayList<>();
 
-        MaterialStock materialExpected = new MaterialStock();
-        materialExpected.setId(1);
-        materialExpected.setBlockedStock(BigDecimal.valueOf(0));
-        materialExpected.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialExpected.setUnrestrictedStock(BigDecimal.valueOf(211.111101));
+        MaterialStock materialExpected = createMaterialStock(1, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101));
         expected.add(materialExpected);
 
         List<MaterialStock> actual = Transfer.countRealStocks(materialStocks, movedStocks);
@@ -46,28 +54,17 @@ public class TransferTest {
     public void countRealStocks_qualityInspectionStock() {
         List<MaterialStock> materialStocks = new ArrayList<>();
 
-        MaterialStock materialStock = new MaterialStock();
-        materialStock.setId(1);
-        materialStock.setBlockedStock(BigDecimal.valueOf(0));
-        materialStock.setQualityInspectionStock(BigDecimal.valueOf(123.45678));
-        materialStock.setUnrestrictedStock(BigDecimal.valueOf(0));
+        MaterialStock materialStock = createMaterialStock(1, BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0));
         materialStocks.add(materialStock);
 
         List<MovedStock> movedStocks = new ArrayList<>();
 
-        MovedStock movedStock = new MovedStock();
-        movedStock.setId(1);
-        movedStock.setMoveType("323");
-        movedStock.setMovTypeSumResult(BigDecimal.valueOf(87.654321));
+        MovedStock movedStock = createMovedStock(1, "323", BigDecimal.valueOf(87.654321));
         movedStocks.add(movedStock);
 
         List<MaterialStock> expected = new ArrayList<>();
 
-        MaterialStock materialExpected = new MaterialStock();
-        materialExpected.setId(1);
-        materialExpected.setBlockedStock(BigDecimal.valueOf(0));
-        materialExpected.setQualityInspectionStock(BigDecimal.valueOf(211.111101));
-        materialExpected.setUnrestrictedStock(BigDecimal.valueOf(0));
+        MaterialStock materialExpected = createMaterialStock(1, BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101), BigDecimal.valueOf(0));
         expected.add(materialExpected);
 
         List<MaterialStock> actual = Transfer.countRealStocks(materialStocks, movedStocks);
@@ -79,28 +76,17 @@ public class TransferTest {
     public void countRealStocks_blockedStock() {
         List<MaterialStock> materialStocks = new ArrayList<>();
 
-        MaterialStock materialStock = new MaterialStock();
-        materialStock.setId(1);
-        materialStock.setBlockedStock(BigDecimal.valueOf(123.45678));
-        materialStock.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialStock.setUnrestrictedStock(BigDecimal.valueOf(0));
+        MaterialStock materialStock = createMaterialStock(1, BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0), BigDecimal.valueOf(0));
         materialStocks.add(materialStock);
 
         List<MovedStock> movedStocks = new ArrayList<>();
 
-        MovedStock movedStock = new MovedStock();
-        movedStock.setId(1);
-        movedStock.setMoveType("325");
-        movedStock.setMovTypeSumResult(BigDecimal.valueOf(87.654321));
+        MovedStock movedStock = createMovedStock(1, "325", BigDecimal.valueOf(87.654321));
         movedStocks.add(movedStock);
 
         List<MaterialStock> expected = new ArrayList<>();
 
-        MaterialStock materialExpected = new MaterialStock();
-        materialExpected.setId(1);
-        materialExpected.setBlockedStock(BigDecimal.valueOf(211.111101));
-        materialExpected.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialExpected.setUnrestrictedStock(BigDecimal.valueOf(0));
+        MaterialStock materialExpected = createMaterialStock(1, BigDecimal.valueOf(211.111101), BigDecimal.valueOf(0), BigDecimal.valueOf(0));
         expected.add(materialExpected);
 
         List<MaterialStock> actual = Transfer.countRealStocks(materialStocks, movedStocks);
@@ -112,23 +98,9 @@ public class TransferTest {
     public void countRealStocks_unsortedLists() {
         List<MaterialStock> materialStocks = new ArrayList<>();
 
-        MaterialStock materialStockOne = new MaterialStock();
-        materialStockOne.setId(1);
-        materialStockOne.setBlockedStock(BigDecimal.valueOf(123.45678));
-        materialStockOne.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialStockOne.setUnrestrictedStock(BigDecimal.valueOf(0));
-
-        MaterialStock materialStockTwo = new MaterialStock();
-        materialStockTwo.setId(2);
-        materialStockTwo.setBlockedStock(BigDecimal.valueOf(0));
-        materialStockTwo.setQualityInspectionStock(BigDecimal.valueOf(123.45678));
-        materialStockTwo.setUnrestrictedStock(BigDecimal.valueOf(0));
-
-        MaterialStock materialStockThree = new MaterialStock();
-        materialStockThree.setId(3);
-        materialStockThree.setBlockedStock(BigDecimal.valueOf(0));
-        materialStockThree.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialStockThree.setUnrestrictedStock(BigDecimal.valueOf(123.45678));
+        MaterialStock materialStockOne = createMaterialStock(1, BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0), BigDecimal.valueOf(0));
+        MaterialStock materialStockTwo = createMaterialStock(2, BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0));
+        MaterialStock materialStockThree = createMaterialStock(3, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678));
 
         materialStocks.add(materialStockThree);
         materialStocks.add(materialStockOne);
@@ -136,20 +108,9 @@ public class TransferTest {
 
         List<MovedStock> movedStocks = new ArrayList<>();
 
-        MovedStock movedStockOne = new MovedStock();
-        movedStockOne.setId(1);
-        movedStockOne.setMoveType("326");
-        movedStockOne.setMovTypeSumResult(BigDecimal.valueOf(87.654321));
-
-        MovedStock movedStockTwo = new MovedStock();
-        movedStockTwo.setId(2);
-        movedStockTwo.setMoveType("324");
-        movedStockTwo.setMovTypeSumResult(BigDecimal.valueOf(87.654321));
-
-        MovedStock movedStockThree = new MovedStock();
-        movedStockThree.setId(3);
-        movedStockThree.setMoveType("262");
-        movedStockThree.setMovTypeSumResult(BigDecimal.valueOf(87.654321));
+        MovedStock movedStockOne = createMovedStock(1, "326", BigDecimal.valueOf(87.654321));
+        MovedStock movedStockTwo = createMovedStock(2, "324", BigDecimal.valueOf(87.654321));
+        MovedStock movedStockThree = createMovedStock(3, "262", BigDecimal.valueOf(87.654321));
 
         movedStocks.add(movedStockTwo);
         movedStocks.add(movedStockOne);
@@ -157,23 +118,44 @@ public class TransferTest {
 
         List<MaterialStock> expected = new ArrayList<>();
 
-        MaterialStock materialExpectedOne = new MaterialStock();
-        materialExpectedOne.setId(1);
-        materialExpectedOne.setBlockedStock(BigDecimal.valueOf(211.111101));
-        materialExpectedOne.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialExpectedOne.setUnrestrictedStock(BigDecimal.valueOf(0));
+        MaterialStock materialExpectedOne = createMaterialStock(1, BigDecimal.valueOf(211.111101), BigDecimal.valueOf(0), BigDecimal.valueOf(0));
+        MaterialStock materialExpectedTwo = createMaterialStock(2, BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101), BigDecimal.valueOf(0));
+        MaterialStock materialExpectedThree = createMaterialStock(3, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101));
 
-        MaterialStock materialExpectedTwo = new MaterialStock();
-        materialExpectedTwo.setId(2);
-        materialExpectedTwo.setBlockedStock(BigDecimal.valueOf(0));
-        materialExpectedTwo.setQualityInspectionStock(BigDecimal.valueOf(211.111101));
-        materialExpectedTwo.setUnrestrictedStock(BigDecimal.valueOf(0));
+        expected.add(materialExpectedOne);
+        expected.add(materialExpectedTwo);
+        expected.add(materialExpectedThree);
 
-        MaterialStock materialExpectedThree = new MaterialStock();
-        materialExpectedThree.setId(3);
-        materialExpectedThree.setBlockedStock(BigDecimal.valueOf(0));
-        materialExpectedThree.setQualityInspectionStock(BigDecimal.valueOf(0));
-        materialExpectedThree.setUnrestrictedStock(BigDecimal.valueOf(211.111101));
+        List<MaterialStock> actual = Transfer.countRealStocks(materialStocks, movedStocks);
+
+        Assert.assertEquals(expected, actual);
+    }
+
+    @Test
+    public void countRealStocks_listsWithDifferentLength() {
+        List<MaterialStock> materialStocks = new ArrayList<>();
+
+        MaterialStock materialStockOne = createMaterialStock(1, BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0), BigDecimal.valueOf(0));
+        MaterialStock materialStockTwo = createMaterialStock(2, BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0));
+        MaterialStock materialStockThree = createMaterialStock(3, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678));
+
+        materialStocks.add(materialStockThree);
+        materialStocks.add(materialStockOne);
+        materialStocks.add(materialStockTwo);
+
+        List<MovedStock> movedStocks = new ArrayList<>();
+
+        MovedStock movedStockOne = createMovedStock(1, "326", BigDecimal.valueOf(87.654321));
+        MovedStock movedStockThree = createMovedStock(3, "262", BigDecimal.valueOf(87.654321));
+
+        movedStocks.add(movedStockThree);
+        movedStocks.add(movedStockOne);
+
+        List<MaterialStock> expected = new ArrayList<>();
+
+        MaterialStock materialExpectedOne = createMaterialStock(1, BigDecimal.valueOf(211.111101), BigDecimal.valueOf(0), BigDecimal.valueOf(0));
+        MaterialStock materialExpectedTwo = createMaterialStock(2, BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0));
+        MaterialStock materialExpectedThree = createMaterialStock(3, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101));
 
         expected.add(materialExpectedOne);
         expected.add(materialExpectedTwo);
