@@ -121,9 +121,9 @@ public class TransferTest {
         MaterialStock materialExpectedTwo = createMaterialStock(expectedStockIdTwo, BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101), BigDecimal.valueOf(0));
         MaterialStock materialExpectedThree = createMaterialStock(expectedStockIdThree, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101));
 
+        expected.add(materialExpectedThree);
         expected.add(materialExpectedOne);
         expected.add(materialExpectedTwo);
-        expected.add(materialExpectedThree);
 
         List<MaterialStock> actual = Transfer.countRealStocks(materialStocks, movedStocks);
 
@@ -164,9 +164,9 @@ public class TransferTest {
         MaterialStock materialExpectedTwo = createMaterialStock(expectedStockIdTwo, BigDecimal.valueOf(0), BigDecimal.valueOf(123.45678), BigDecimal.valueOf(0));
         MaterialStock materialExpectedThree = createMaterialStock(expectedStockIdThree, BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(211.111101));
 
+        expected.add(materialExpectedThree);
         expected.add(materialExpectedOne);
         expected.add(materialExpectedTwo);
-        expected.add(materialExpectedThree);
 
         List<MaterialStock> actual = Transfer.countRealStocks(materialStocks, movedStocks);
 

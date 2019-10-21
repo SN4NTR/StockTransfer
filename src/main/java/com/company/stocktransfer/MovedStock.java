@@ -2,8 +2,6 @@ package com.company.stocktransfer;
 
 import lombok.Data;
 
-import java.math.BigDecimal;
-
 @Data
 public class MovedStock {
 
