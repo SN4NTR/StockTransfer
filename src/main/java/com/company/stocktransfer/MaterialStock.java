@@ -7,7 +7,7 @@ import java.math.BigDecimal;
 @Data
 public class MaterialStock {
 
-    private Integer id;
+    private StockId id;
     private BigDecimal unrestrictedStock;
     private BigDecimal qualityInspectionStock;
     private BigDecimal blockedStock;
